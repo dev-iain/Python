@@ -60,7 +60,17 @@ def num_digits_fast(n: int) -> int:
     """
     if not isinstance(n, int):
         raise TypeError("Input must be an integer")
-    return 1 if n == 0 else math.floor(math.log10(abs(n)) + 1)
+    if n == 0:
+        return 1
+    absolute_value = abs(n)
+    digits = math.floor(math.log10(absolute_value)) + 1
+    # The float logarithm can be off by one near powers of ten, so check the
+    # estimate against exact integer powers of ten and correct it.
+    if absolute_value >= 10**digits:
+        digits += 1
+    elif absolute_value < 10 ** (digits - 1):
+        digits -= 1
+    return digits
 
 
 def num_digits_faster(n: int) -> int:
